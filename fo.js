@@ -2,10 +2,40 @@ import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
 
-const inputArr = process.argv.slice(2);
+const inputArr = process.argv.slice(2),
+    types = {
+        media: ['mp4', 'mkv', 'mp3', 'amv'],
+        archives: ['gz', 'bz', 'zip', '7z', 'rar', 'tar', 'iso'],
+        docs: ['pdf', 'doc', 'docx', 'ppt', 'xls', 'xlsx', 'odt', 'odf', 'txt', 'tex', 'ps'],
+        app: ['deb', 'bin', 'sh'],
+        img: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
+        program: ['c', 'cpp', 'java', 'js', 'ts', 'py', 'go', 'html', 'css', 'xml']
+    };
 
 const treeFunc = () => {
     console.log(chalk.green('Tree Function executed.'));
+}
+
+const orgAcc = (src, dest) => {
+    const files = fs.readdirSync(src);
+
+    files.forEach(file => {
+        const filePath = path.join(src, file),
+            fileStat = fs.statSync(filePath);
+
+        if (fileStat.isDirectory())
+            return;
+
+        const fileExt = path.extname(filePath).slice(1);
+
+        for (const type in types) {
+            if (types[type].includes(fileExt)) {
+                console.log(chalk.yellow(`${file} is of type ${type}`));
+                return;
+            }
+        }
+        console.log(chalk.yellow(`${file} is of type unknown`));
+    });
 }
 
 const organiseFunc = (dirPath) => {
@@ -22,6 +52,7 @@ const organiseFunc = (dirPath) => {
 
     fs.mkdirSync(destPath);
 
+    orgAcc(dirPath);
     console.log(chalk.green('Organise Function executed.'));
 }
 
