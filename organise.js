@@ -1,6 +1,15 @@
 import fs from 'fs';
 import path from 'path';
 import chalk from 'chalk';
+import types from './types.js';
+
+const sendFile = (dest, type, filePath) => {
+    const catPath = path.join(dest, type);
+    if (!fs.existsSync(catPath))
+        fs.mkdirSync(catPath);
+
+    fs.copyFileSync(filePath, path.join(catPath, path.basename(filePath)));
+}
 
 const orgAcc = (src, dest) => {
     const files = fs.readdirSync(src);
@@ -17,14 +26,16 @@ const orgAcc = (src, dest) => {
         for (const type in types) {
             if (types[type].includes(fileExt)) {
                 console.log(chalk.yellow(`${file} is of type ${type}.`));
-                return sendFile(filePath, dest, type);
+                sendFile(dest, type, filePath);
+
+                return console.log(chalk.green(`${path.basename(filePath)} moved to ${type}`));
             }
         }
-        console.log(chalk.yellow(`${file} is of type unknown.`));
+        sendFile(dest, 'others', filePath);
     });
 }
 
-const organiseFunc = (dirPath) => {
+const organise = (dirPath) => {
     if (dirPath === undefined)
         return console.log(chalk.red('Invalid path provided.'));
 
@@ -41,3 +52,5 @@ const organiseFunc = (dirPath) => {
     orgAcc(dirPath, destPath);
     console.log(chalk.green('Organise Function executed.'));
 }
+
+export default organise;

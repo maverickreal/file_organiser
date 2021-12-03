@@ -6,3 +6,5 @@ const types = {
     img: ['jpg', 'jpeg', 'png', 'gif', 'bmp', 'svg', 'webp'],
     program: ['c', 'cpp', 'java', 'js', 'ts', 'py', 'go', 'html', 'css', 'xml']
 };
+
+export default types;
