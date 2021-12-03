@@ -13,16 +13,17 @@ const inputArr = process.argv.slice(2),
         program: ['c', 'cpp', 'java', 'js', 'ts', 'py', 'go', 'html', 'css', 'xml']
     };
 
-const treeAcc = (dirpath, indent='\t') => {
+const treeAcc = (dirpath, indentStr = ' ', indentChar = ' ') => {
     const baseName = path.basename(dirpath);
+    indentStr = `${indentStr}${indentChar}`;
 
     if (fs.lstatSync(dirpath).isFile() === true)
-        return console.log(chalk.yellow('File:' + indent + '├── ' + baseName));
+        return console.log(chalk.magentaBright('F:') + chalk.yellow(indentStr + '└──  ' + baseName));
 
-    console.log(chalk.yellow('Exploring:' + indent + '├── ' + baseName));
+    console.log(chalk.cyan('D:') + chalk.yellow(indentStr + '├── ' + baseName));
     const children = fs.readdirSync(dirpath);
     for (const child of children)
-        treeAcc(path.join(dirpath, child), indent + '\t');
+        treeAcc(path.join(dirpath, child), indentStr + ' ');
 }
 
 const treeFunc = (dirPath) => {
