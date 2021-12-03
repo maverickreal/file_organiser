@@ -13,7 +13,25 @@ const inputArr = process.argv.slice(2),
         program: ['c', 'cpp', 'java', 'js', 'ts', 'py', 'go', 'html', 'css', 'xml']
     };
 
-const treeFunc = () => {
+const treeAcc = (dirpath, indent='\t') => {
+    const baseName = path.basename(dirpath);
+
+    if (fs.lstatSync(dirpath).isFile() === true)
+        return console.log(chalk.yellow('File:' + indent + '├── ' + baseName));
+
+    console.log(chalk.yellow('Exploring:' + indent + '├── ' + baseName));
+    const children = fs.readdirSync(dirpath);
+    for (const child of children)
+        treeAcc(path.join(dirpath, child), indent + '\t');
+}
+
+const treeFunc = (dirPath) => {
+    if (dirPath === undefined)
+        return console.log(chalk.red('invalid path provided!'));
+
+    if (fs.existsSync(dirPath))
+        treeAcc(dirPath);
+
     console.log(chalk.green('Tree Function executed.'));
 }
 
@@ -76,7 +94,7 @@ const helpFunc = () => {
 
 switch (inputArr[0]) {
     case 'tree':
-        treeFunc();
+        treeFunc(inputArr[1]);
         break;
     case 'organise':
         organiseFunc(inputArr[1]);
