@@ -1,6 +1,7 @@
 import chalk from 'chalk';
 import path from 'path';
 import fs from 'fs';
+//import organise from './organise';
 
 const inputArr = process.argv.slice(2),
     types = {
