@@ -30,11 +30,11 @@ const orgAcc = (src, dest) => {
 
         for (const type in types) {
             if (types[type].includes(fileExt)) {
-                console.log(chalk.yellow(`${file} is of type ${type}`));
-                return;
+                console.log(chalk.yellow(`${file} is of type ${type}.`));
+                return sendFile(filePath, dest, type);
             }
         }
-        console.log(chalk.yellow(`${file} is of type unknown`));
+        console.log(chalk.yellow(`${file} is of type unknown.`));
     });
 }
 
@@ -52,12 +52,22 @@ const organiseFunc = (dirPath) => {
 
     fs.mkdirSync(destPath);
 
-    orgAcc(dirPath);
+    orgAcc(dirPath, destPath);
     console.log(chalk.green('Organise Function executed.'));
 }
 
+const sendFile = (src, dest, catg) => {
+    const catPath = path.join(dest, catg);
+    if (!fs.existsSync(catPath))
+        fs.mkdirSync(catPath);
+
+    fs.copyFileSync(src, path.join(catPath, path.basename(src)));
+
+    console.log(chalk.green(`${path.basename(src)} moved to ${catg}`));
+}
+
 const helpFunc = () => {
-    console.log(chalk.green(`All commands:
+    console.log(chalk.yellow(`All commands:
     1. tree
     2. organise
     3. help`));
